@@ -1,0 +1,149 @@
+package smallbearrr/pandas/lib/pandas
+
+// Values
+
+// Types and methods
+pub(all) enum BasicType {
+  Int
+  Float
+  Bool
+  Str
+}
+impl Eq for BasicType
+
+type ColumnNotFoundError
+impl Show for ColumnNotFoundError
+
+pub(all) enum ColumnSelector {
+  Int(Int)
+  Str(String)
+}
+
+pub(all) enum DType {
+  Int(Int)
+  Float(Float)
+  Bool(Bool)
+  Str(String)
+}
+impl Compare for DType
+impl Eq for DType
+impl Show for DType
+
+pub(all) struct DataFrame {
+  data : Array[Series]
+  shape : Array[Int]
+  index : Map[String, Int]
+}
+impl DataFrame {
+  add_column(Self, Series) -> Unit!
+  add_row(Self, Array[DType]) -> Unit!
+  clear(Self) -> Unit
+  clone(Self) -> Self
+  column(Self, String) -> Series!ColumnNotFoundError
+  count(Self) -> (Int, Int)
+  data(Self) -> Array[Series]
+  drop_column(Self, String) -> Unit!ColumnNotFoundError
+  drop_row(Self, Int) -> Unit!
+  filter(Self, String, (DType) -> Bool) -> Self!
+  get_column_index(Self, String) -> Int!
+  head(Self, rows~ : Int = ..) -> Unit
+  hstack(Self, Self) -> Self!
+  item(Self, Int, ColumnSelector) -> DType!
+  limit(Self, Int) -> Self!
+  max(Self) -> Self!
+  max_horizontal(Self) -> Series!
+  min(Self) -> Self!
+  min_horizontal(Self) -> Series!
+  new(Array[Series]) -> Self!InconsistentSeriesLength
+  op_get(Self, Int) -> Self
+  rename(Self, String, String) -> Unit!ColumnNotFoundError
+  replace_column(Self, Int, Series) -> Unit!
+  reverse(Self) -> Unit
+  select_columns(Self, Array[String]) -> Self!ColumnNotFoundError
+  select_rows(Self, range? : (Int, Int), indices? : Array[Int]) -> Self!IndexOutOfBounds
+  shape(Self) -> Array[Int]
+  slice(Self, Int, length? : Int) -> Self!
+  sort(Self, String, descending~ : Bool = ..) -> Unit!ColumnNotFoundError
+  sum(Self) -> Self!InvalidType
+  sum_horizontal(Self) -> Series!
+  tail(Self, Int) -> Self!
+  to_series(Self, Int) -> Series
+  transpose(Self, include_header~ : Bool = .., header_name~ : String = .., column_names? : Array[String]) -> Self!
+  unique(Self, Array[String], keep~ : String = ..) -> Self!
+  vstack(Self, Self) -> Self!
+  with_row_index(Self, offset~ : Int = ..) -> Self
+}
+impl Eq for DataFrame
+impl Hash for DataFrame
+impl Show for DataFrame
+
+type DuplicateColumnError
+impl Show for DuplicateColumnError
+
+type EmptyArrayError
+impl Show for EmptyArrayError
+
+type InconsistentSeriesLength
+impl Show for InconsistentSeriesLength
+
+type IndexOutOfBounds
+impl Show for IndexOutOfBounds
+
+type InvalidType
+impl Show for InvalidType
+
+pub(all) struct Series {
+  name : String
+  data : SeriesData
+}
+impl Series {
+  argsort(Self, descending~ : Bool = ..) -> Array[Int]
+  copy(Self) -> Self
+  count(Self) -> Int
+  data(Self) -> SeriesData
+  get_type(Self) -> BasicType
+  max(Self) -> DType!
+  mean(Self) -> Float!
+  merge(Self, Self) -> Self!InvalidType
+  min(Self) -> DType!
+  name(Self) -> String
+  new(String, SeriesData) -> Self
+  op_add(Self, Self) -> Self
+  op_div(Self, Self) -> Self
+  op_get(Self, Int) -> DType
+  op_mul(Self, Self) -> Self
+  op_sub(Self, Self) -> Self
+  reverse(Self) -> Unit
+  sum(Self) -> DType!InvalidType
+  var(Self, ddof~ : Int = ..) -> Float!
+}
+impl Eq for Series
+impl Hash for Series
+impl Show for Series
+
+pub(all) enum SeriesData {
+  Int(Array[Int])
+  Float(Array[Float])
+  Bool(Array[Bool])
+  Str(Array[String])
+}
+impl SeriesData {
+  argsort(Self, descending~ : Bool = ..) -> Array[Int]
+  clear(Self) -> Unit
+  empty(Self) -> Bool
+  erase(Self, Int) -> Unit!EmptyArrayError
+  length(Self) -> Int
+  op_add(Self, Self) -> Self
+  op_div(Self, Self) -> Self
+  op_mul(Self, Self) -> Self
+  op_sub(Self, Self) -> Self
+  sort(Self) -> Unit
+}
+impl Eq for SeriesData
+impl Hash for SeriesData
+impl Show for SeriesData
+
+// Type aliases
+
+// Traits
+
