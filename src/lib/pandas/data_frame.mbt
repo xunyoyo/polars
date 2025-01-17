@@ -956,18 +956,15 @@ pub fn tail(self : DataFrame, n : Int) -> DataFrame!Error {
 ///     Series::new("A", SeriesData::Int([1, 2, 3, 4, 5])),
 ///     Series::new("B", SeriesData::Float([1.1, 2.2, 3.3, 4.4, 5.5])),
 ///   ])
-///   let sliced = df.slice!(1, Some(2))
+///   let sliced = df.slice!(1, length=2)
 /// ```
 pub fn DataFrame::slice(
   self : DataFrame,
   offset : Int,
-  length? : Int
+  length~ : Int = self.shape()[0] - offset
 ) -> DataFrame!Error {
   let data : Array[Series] = []
-  let len = match length {
-    Some(l) => l
-    None => self.shape()[0] - offset
-  }
+  let len = length
   for series in self.data {
     let new_data = match series.data {
       SeriesData::Int(data) =>
@@ -982,6 +979,37 @@ pub fn DataFrame::slice(
     data.push(Series::new(series.name, new_data))
   }
   DataFrame::new!(data)
+}
+
+///|
+/// Splits a DataFrame into two parts at the specified index.
+///
+/// Parameters:
+///
+/// * `self` : The DataFrame to be split.
+/// * `offset` : The index at which to split the DataFrame. The first DataFrame
+/// will contain rows \[0, offset), and the second DataFrame will contain rows
+/// \[offset, length).
+///
+/// Returns a tuple containing two DataFrames: the first containing rows before
+/// the offset, and the second containing rows from the offset onwards.
+///
+/// Throws an error if the offset is out of bounds or if creating the new
+/// DataFrames fails.
+///
+/// Example:
+///
+/// ```moonbit
+/// let df = DataFrame::new!([
+///   Series::new("A", SeriesData::Int([1, 2, 3, 4])),
+///   Series::new("B", SeriesData::Float([1.5, 2.5, 3.5, 4.5])),
+/// ])
+/// let (df1, df2) = df.split_at!(2)
+/// ```
+pub fn DataFrame::split_at(self : DataFrame, offset: Int) -> (DataFrame, DataFrame)!Error {
+  let slice1 = self.slice!(0, length=offset)
+  let slice2 = self.slice!(offset)
+  (slice1, slice2)
 }
 
 ///|
