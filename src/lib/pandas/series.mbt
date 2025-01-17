@@ -694,6 +694,11 @@ fn SeriesData::max(self : SeriesData, other : SeriesData) -> Unit {
   }
 }
 
+///| TODO: Implement Series::apply
+pub fn Series::apply[T, R](self : Series, f : (T) -> R) -> Series {
+  self.apply(f)
+}
+
 ///| Tests
 test "series" {
   let series = Series::new("test", SeriesData::Int([1, 2, 3, 4, 5]))
