@@ -981,6 +981,19 @@ pub fn DataFrame::slice(
   DataFrame::new!(data)
 }
 
+test "DataFrame::slice" {
+  let df = DataFrame::new!([
+    Series::new("A", SeriesData::Int([1, 2, 3, 4, 5])),
+    Series::new("B", SeriesData::Float([1.0, 2.0, 3.0, 4.0, 5.0])),
+  ])
+  let sliced = df.slice!(1, length=2)
+  // sliced |> println
+  // sliced.data()[1].data() |> println
+  inspect!(sliced.shape(), content="[2, 2]")
+  inspect!(sliced.data()[0].data(), content="Int([2, 3])")
+  inspect!(sliced.data()[1].data(), content="Float([2, 3])")
+}
+
 ///|
 /// Splits a DataFrame into two parts at the specified index.
 ///
@@ -1582,40 +1595,6 @@ pub fn DataFrame::sum_horizontal(self : DataFrame) -> Series! {
     data += series
   }
   data
-}
-
-///|
-/// NOT USABLE!!!
-/// Applies a transformation function to a column in the DataFrame, modifying the
-/// column in place.
-///
-/// Parameters:
-///
-/// * `self` : The DataFrame instance to modify.
-/// * `column_name` : The name of the column to apply the transformation to.
-/// * `transform` : A function that takes a value of type `T` and returns a value
-/// of type `R`. This function will be applied to each element in the specified
-/// column.
-///
-/// Throws:
-///
-/// * `ColumnNotFoundError` : If the specified column does not exist in the
-/// DataFrame.
-/// * `IndexOutOfBounds` : If attempting to access invalid indices during column
-/// replacement.
-/// * `InvalidType` : If the transformation function's input type doesn't match
-/// the column's data type.
-///
-/// Example:
-///
-/// ```moonbit
-/// let mut df = DataFrame::new!([Series::new("A", SeriesData::Int([1, 2, 3]))])
-/// df.apply!("A", fn(x : Int) -> Int { x * 2 })
-/// ```
-pub fn DataFrame::apply[T, R](self : DataFrame, name : String, f : (T) -> R) -> Unit!Error {
-  let col = self.column!(name)
-  let new_data = col.apply(f)
-  self.replace_column!(self.get_column_index!(name), new_data)
 }
 
 ///| Tests
