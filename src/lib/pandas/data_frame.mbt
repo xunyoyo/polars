@@ -963,22 +963,26 @@ pub fn DataFrame::slice(
   offset : Int,
   length~ : Int = self.shape()[0] - offset
 ) -> DataFrame!Error {
-  let data : Array[Series] = []
-  let len = length
-  for series in self.data {
-    let new_data = match series.data {
-      SeriesData::Int(data) =>
-        SeriesData::Int(data.split_at(offset).1.split_at(len).0)
-      SeriesData::Float(data) =>
-        SeriesData::Float(data.split_at(offset).1.split_at(len).0)
-      SeriesData::Bool(data) =>
-        SeriesData::Bool(data.split_at(offset).1.split_at(len).0)
-      SeriesData::Str(data) =>
-        SeriesData::Str(data.split_at(offset).1.split_at(len).0)
+  if length < 0 || offset + length > self.shape()[0] {
+    raise IndexOutOfBounds("length cannot be negative")
+  } else {
+    let data : Array[Series] = []
+    let len = length
+    for series in self.data {
+      let new_data = match series.data {
+        SeriesData::Int(data) =>
+          SeriesData::Int(data.split_at(offset).1.split_at(len).0)
+        SeriesData::Float(data) =>
+          SeriesData::Float(data.split_at(offset).1.split_at(len).0)
+        SeriesData::Bool(data) =>
+          SeriesData::Bool(data.split_at(offset).1.split_at(len).0)
+        SeriesData::Str(data) =>
+          SeriesData::Str(data.split_at(offset).1.split_at(len).0)
+      }
+      data.push(Series::new(series.name, new_data))
     }
-    data.push(Series::new(series.name, new_data))
+    DataFrame::new!(data)
   }
-  DataFrame::new!(data)
 }
 
 test "DataFrame::slice" {
@@ -1019,7 +1023,10 @@ test "DataFrame::slice" {
 /// ])
 /// let (df1, df2) = df.split_at!(2)
 /// ```
-pub fn DataFrame::split_at(self : DataFrame, offset: Int) -> (DataFrame, DataFrame)!Error {
+pub fn DataFrame::split_at(
+  self : DataFrame,
+  offset : Int
+) -> (DataFrame, DataFrame)!Error {
   let slice1 = self.slice!(0, length=offset)
   let slice2 = self.slice!(offset)
   (slice1, slice2)
