@@ -941,7 +941,7 @@ pub fn tail(self : DataFrame, n : Int) -> DataFrame!Error {
 ///
 /// * `self` : The DataFrame to slice.
 /// * `offset` : The starting index of the slice (zero-based).
-/// * `length` : Optional parameter specifying the number of rows to include in
+/// * `length` : Specifying the number of rows to include in
 /// the slice. If not provided, includes all remaining rows after the offset.
 ///
 /// Returns a new DataFrame containing the specified slice of rows from the
