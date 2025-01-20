@@ -244,7 +244,7 @@ pub fn op_add(self : SeriesData, other : SeriesData) -> SeriesData {
 }
 
 ///| Series add
-pub fn op_add(self : Series, other : Series) -> Series {
+pub fn Series::op_add(self : Series, other : Series) -> Series {
   Series::new(self.name(), self.data() + other.data())
 }
 
@@ -272,7 +272,7 @@ pub fn op_sub(self : SeriesData, other : SeriesData) -> SeriesData {
 }
 
 ///| 
-pub fn op_get(self : Series, index : Int) -> DType {
+pub fn Series::op_get(self : Series, index : Int) -> DType {
   match self.data {
     SeriesData::Int(data) => DType::Int(data[index])
     SeriesData::Float(data) => DType::Float(data[index])
@@ -282,7 +282,7 @@ pub fn op_get(self : Series, index : Int) -> DType {
 }
 
 ///| Series sub
-pub fn op_sub(self : Series, other : Series) -> Series {
+pub fn Series::op_sub(self : Series, other : Series) -> Series {
   Series::new(self.name(), self.data() - other.data())
 }
 
@@ -310,7 +310,7 @@ pub fn op_mul(self : SeriesData, other : SeriesData) -> SeriesData {
 }
 
 ///| Series mul
-pub fn op_mul(self : Series, other : Series) -> Series {
+pub fn Series::op_mul(self : Series, other : Series) -> Series {
   Series::new(self.name(), self.data() * other.data())
 }
 
@@ -338,7 +338,7 @@ pub fn op_div(self : SeriesData, other : SeriesData) -> SeriesData {
 }
 
 ///| Series div
-pub fn op_div(self : Series, other : Series) -> Series {
+pub fn Series::op_div(self : Series, other : Series) -> Series {
   Series::new(self.name(), self.data() / other.data())
 }
 
@@ -365,7 +365,7 @@ fn copy(self : SeriesData) -> SeriesData {
 }
 
 ///|
-pub fn copy(self : Series) -> Series {
+pub fn Series::copy(self : Series) -> Series {
   Series::new(self.name(), self.data().copy())
 }
 

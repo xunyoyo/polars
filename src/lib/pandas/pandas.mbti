@@ -40,7 +40,6 @@ impl DataFrame {
   clear(Self) -> Unit
   clone(Self) -> Self
   column(Self, String) -> Series!ColumnNotFoundError
-  count(Self) -> (Int, Int)
   data(Self) -> Array[Series]
   drop_column(Self, String) -> Unit!ColumnNotFoundError
   drop_row(Self, Int) -> Unit!
@@ -62,8 +61,9 @@ impl DataFrame {
   select_columns(Self, Array[String]) -> Self!ColumnNotFoundError
   select_rows(Self, range? : (Int, Int), indices? : Array[Int]) -> Self!IndexOutOfBounds
   shape(Self) -> Array[Int]
-  slice(Self, Int, length? : Int) -> Self!
+  slice(Self, Int, length~ : Int = ..) -> Self!
   sort(Self, String, descending~ : Bool = ..) -> Unit!ColumnNotFoundError
+  split_at(Self, Int) -> (Self, Self)!
   sum(Self) -> Self!InvalidType
   sum_horizontal(Self) -> Series!
   tail(Self, Int) -> Self!
